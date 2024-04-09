@@ -1,9 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
+
   theme: {
+    fontSize: {
+      base: ['15px', '21px'],
+      xs: ['11px', '15px'],
+      lg: ['21px', '25px'],
+    },
     extend: {
       colors: {
+        black: '#262626',
+        button: '#141414',
         purple: '#6E23E7',
         'light-purple': '#B7A5D8',
         'lighter-purple': '#F6F1FF',

@@ -3,7 +3,7 @@ import { Router } from '@solidjs/router';
 import { FileRoutes } from '@solidjs/start/router';
 import { Suspense } from 'solid-js';
 import './app.css';
-import { addToCart } from '~/hooks/useCart';
+import { addToCart } from '~/lib/cart';
 
 export default function App() {
   return (

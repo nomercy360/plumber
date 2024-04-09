@@ -1,6 +1,6 @@
 import { createEffect, createSignal, For } from 'solid-js';
 import Navbar from '~/components/Navbar';
-import { getCartItems, getTotalItems } from '~/hooks/useCart';
+import { getCartItems, getTotalItems } from '~/lib/cart';
 
 export default function Home() {
   const [shippingOption, setShippingOption] = createSignal('standard');
@@ -33,8 +33,8 @@ export default function Home() {
         <div class='grid max-w-7xl grid-cols-2 gap-10'>
           <div>
             <div class='mb-5 flex flex-row items-center justify-between'>
-              <p class='text-xl'>Total</p>
-              <p class='text-xl'>{total}</p>
+              <p class='text-lg'>Total</p>
+              <p class='text-lg'>{total}</p>
             </div>
             <div class='mb-8 flex flex-row items-center justify-between'>
               <p class='uppercase'>{getTotalItems()} items in bag</p>

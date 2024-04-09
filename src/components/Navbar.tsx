@@ -1,23 +1,21 @@
 import Icons from './Icons';
 import { createEffect, createSignal, Show } from 'solid-js';
-import { addToCart, getTotalItems, initCart } from '~/hooks/useCart';
+import { getTotalItems, initCart } from '~/lib/cart';
 
 export default function Navbar(props: { style: 'dark' | 'light' }) {
   const [isMenuOpen, setIsMenuOpen] = createSignal(false);
 
-  const handleMenu = () => {
-    setIsMenuOpen(!isMenuOpen());
-
-    if (isMenuOpen()) {
-      document.body.style.overflow = 'auto';
-    } else {
-      document.body.style.overflow = 'hidden';
-    }
-  };
-
   createEffect(() => {
     initCart();
   }, []);
+
+  createEffect(() => {
+    if (isMenuOpen()) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  });
 
   return (
     <nav
@@ -31,22 +29,17 @@ export default function Navbar(props: { style: 'dark' | 'light' }) {
         <a href='#'>Gift Card</a>
         <a href='#'>Bespoke & Tailoring</a>
         <a href='#'>About</a>
-        <a href='/checkout'>
-          <Icons.cart class='size-4' />
-          <span class='text-xs'>{getTotalItems()}</span>
-        </a>
+        <CartButton cartItems={getTotalItems()} />
       </div>
       <div class='flex flex-row items-center justify-between gap-3 sm:hidden'>
-        <a href='#'>
-          <Icons.cart class='size-4' />
-        </a>
-        <button onClick={handleMenu}>
+        <CartButton cartItems={getTotalItems()} />
+        <button onClick={() => setIsMenuOpen(true)}>
           <Icons.menu class='size-4' />
         </button>
       </div>
       <Show when={isMenuOpen()}>
         <div class='absolute left-0 top-0 z-50 flex size-full flex-col items-center justify-center bg-white'>
-          <button onClick={handleMenu}>
+          <button onClick={() => setIsMenuOpen(false)}>
             <Icons.close class='absolute right-7 top-8 size-4' />
           </button>
           <a href='#'>Gift Card</a>
@@ -57,3 +50,22 @@ export default function Navbar(props: { style: 'dark' | 'light' }) {
     </nav>
   );
 }
+
+const CartButton = (props: { cartItems: number }) => {
+  return (
+    <a href='/checkout'>
+      <div class='relative flex h-4 w-5 items-center justify-center'>
+        <span
+          classList={{
+            'absolute -bottom-1 left-0 flex size-3 items-center justify-center rounded-full text-[8px] text-white':
+              true,
+            'bg-purple': props.cartItems > 0,
+            'bg-button': props.cartItems === 0,
+          }}>
+          {props.cartItems}
+        </span>
+        <Icons.cart class='h-4 w-5' />
+      </div>
+    </a>
+  );
+};

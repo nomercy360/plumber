@@ -4,9 +4,9 @@ export default function PhotoGallery() {
   const [isMobile, setIsMobile] = createSignal(false);
   const [activeIndex, setActiveIndex] = createSignal(0);
 
-  // createEffect(() => {
-  //   setIsMobile(window.innerWidth < 640)
-  // })
+  createEffect(() => {
+    setIsMobile(window.innerWidth < 640);
+  });
 
   const images = [
     {
