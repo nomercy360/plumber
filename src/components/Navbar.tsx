@@ -38,7 +38,7 @@ export default function Navbar(props: { style: 'dark' | 'light' }) {
         </button>
       </div>
       <Show when={isMenuOpen()}>
-        <div class='absolute left-0 top-0 z-50 flex size-full flex-col items-center justify-center bg-white'>
+        <div class='absolute left-0 top-0 z-50 flex size-full flex-col items-center justify-center bg-white text-black'>
           <button onClick={() => setIsMenuOpen(false)}>
             <Icons.close class='absolute right-7 top-8 size-4' />
           </button>

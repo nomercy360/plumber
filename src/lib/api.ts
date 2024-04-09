@@ -8,7 +8,7 @@ export const products = [
     handle: 'silk-dress',
     title: '',
     sizes: ['XS', 'S', 'M'],
-    image: '/images/showcase.png',
+    image: '/images/showcase.webp',
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ export const products = [
       'A flirty diagonal slit that adds a dash of sass, while cute cotton lines at the waist hug your curves in all the right places. Perfect for twirling and turning heads at any special occasion.',
     handle: 'spaghetti-strap-dress',
     sizes: ['XS', 'S', 'M'],
-    image: '/images/showcase_2.png',
+    image: '/images/showcase_2.webp',
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ export const products = [
       'A flirty diagonal slit that adds a dash of sass, while cute cotton lines at the waist hug your curves in all the right places. Perfect for twirling and turning heads at any special occasion.',
     handle: 'notched-lapel-blazer',
     sizes: ['XS', 'S', 'M'],
-    image: '/images/showcase_3.png',
+    image: '/images/showcase_3.webp',
   },
   {
     id: 4,
@@ -38,7 +38,7 @@ export const products = [
       'A flirty diagonal slit that adds a dash of sass, while cute cotton lines at the waist hug your curves in all the right places. Perfect for twirling and turning heads at any special occasion.',
     handle: 'high-waisted-denim-shorts',
     sizes: ['XS', 'S', 'M'],
-    image: '/images/showcase.png',
+    image: '/images/showcase.webp',
   },
   {
     id: 5,
@@ -48,7 +48,7 @@ export const products = [
       'A flirty diagonal slit that adds a dash of sass, while cute cotton lines at the waist hug your curves in all the right places. Perfect for twirling and turning heads at any special occasion.',
     handle: 'a-line-midi-skirt',
     sizes: ['XS', 'S', 'M'],
-    image: '/images/showcase_2.png',
+    image: '/images/showcase_2.webp',
   },
   {
     id: 6,
@@ -58,7 +58,7 @@ export const products = [
       'A flirty diagonal slit that adds a dash of sass, while cute cotton lines at the waist hug your curves in all the right places. Perfect for twirling and turning heads at any special occasion.',
     handle: 'cropped-denim-jacket',
     sizes: ['XS', 'S', 'M'],
-    image: '/images/showcase_3.png',
+    image: '/images/showcase_3.webp',
   },
   {
     id: 7,
@@ -68,7 +68,7 @@ export const products = [
       'A flirty diagonal slit that adds a dash of sass, while cute cotton lines at the waist hug your curves in all the right places. Perfect for twirling and turning heads at any special occasion.',
     handle: 'silk-dress',
     sizes: ['XS', 'S', 'M'],
-    image: '/images/showcase.png',
+    image: '/images/showcase.webp',
   },
   {
     id: 8,
@@ -78,6 +78,6 @@ export const products = [
       'A flirty diagonal slit that adds a dash of sass, while cute cotton lines at the waist hug your curves in all the right places. Perfect for twirling and turning heads at any special occasion.',
     handle: 'spaghetti-strap-dress',
     sizes: ['XS', 'S', 'M'],
-    image: '/images/showcase_2.png',
+    image: '/images/showcase_2.webp',
   },
 ];

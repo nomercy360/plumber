@@ -10,16 +10,16 @@ export default function PhotoGallery() {
 
   const images = [
     {
-      imgPath: '/images/preview.png',
+      imgPath: '/images/preview.webp',
     },
     {
-      imgPath: '/images/preview_2.png',
+      imgPath: '/images/preview_2.webp',
     },
     {
-      imgPath: '/images/preview_3.png',
+      imgPath: '/images/preview_3.webp',
     },
     {
-      imgPath: '/images/preview_4.png',
+      imgPath: '/images/preview_4.webp',
     },
   ];
 

@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.green-blur-circle {
+    fill: rgba(0, 219, 146, 0.10);
+
+    filter: blur(17px);
+}
