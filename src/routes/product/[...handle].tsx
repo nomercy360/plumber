@@ -33,6 +33,7 @@ export default function ProductPage(props: RouteSectionProps) {
       name: product()!.name,
       price: product()!.price,
       quantity: 1,
+      size: selectedSize(),
     };
 
     addToCart(item);

@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For } from 'solid-js';
+import { createEffect, createSignal, For, Show } from 'solid-js';
 import Navbar from '~/components/Navbar';
 import { getCartItems, getTotalItems } from '~/lib/cart';
 
@@ -6,10 +6,6 @@ export default function Home() {
   const [shippingOption, setShippingOption] = createSignal('standard');
   const [discount, setDiscount] = createSignal(0);
   const [promoCode, setPromoCode] = createSignal('');
-
-  createEffect(() => {
-    console.log('Shipping option:', shippingOption());
-  });
 
   const fetchDiscount = async () => {
     if (!promoCode()) return;
@@ -24,35 +20,50 @@ export default function Home() {
   const [zip, setZip] = createSignal('');
   const [phone, setPhone] = createSignal('');
 
-  const total = '$1400';
+  const [total, setTotal] = createSignal(0);
+  const [shippingCost, setShippingCost] = createSignal(30);
+
+  createEffect(() => {
+    let total = 0;
+    getCartItems().forEach((item) => {
+      total += item.price;
+    });
+    total += shippingCost();
+    total -= (total * discount()) / 100;
+    setTotal(total);
+  });
+
+  createEffect(() => {
+    setShippingCost(shippingOption() === 'standard' ? 30 : 50);
+  });
 
   return (
     <div>
       <Navbar style={'light'} />
-      <main class='mt-14 flex items-center justify-center p-10'>
-        <div class='grid max-w-7xl grid-cols-2 gap-10'>
-          <div>
+      <main class='mt-8 flex items-center justify-center sm:mt-14'>
+        <div class='max-w-7xl grid-cols-2 gap-10 p-0 sm:grid sm:p-10'>
+          <div class='p-5 sm:p-0'>
             <div class='mb-5 flex flex-row items-center justify-between'>
-              <p class='text-lg'>Total</p>
-              <p class='text-lg'>{total}</p>
+              <p class='text-lg'>Total order</p>
+              <p class='text-lg'>${total()}</p>
             </div>
-            <div class='mb-8 flex flex-row items-center justify-between'>
+            <div class='mb-5 flex flex-row items-center justify-between'>
               <p class='uppercase'>{getTotalItems()} items in bag</p>
-              <p>{total}</p>
+              <p>${total()}</p>
             </div>
             <div class='mb-10 flex flex-col items-center justify-between gap-6'>
               <For each={getCartItems()}>
                 {(item) => (
                   <div class='flex w-full flex-row items-start justify-between'>
-                    <div class='flex flex-row items-center gap-3'>
+                    <div class='flex flex-row items-start gap-3'>
                       <img
                         alt=''
-                        class='h-10 w-10 rounded-full'
+                        class='size-10 rounded-full object-cover'
                         src='/images/thumb.png'
                       />
                       <div class='flex flex-col'>
                         <p>{item.name}</p>
-                        <p class='text-xs text-gray'>XS, Blue</p>
+                        <p class='text-xs text-gray'>{item.size}</p>
                       </div>
                     </div>
                     <p>${item.price}</p>
@@ -62,7 +73,7 @@ export default function Home() {
             </div>
             <div class='mb-3 flex flex-row items-center justify-between'>
               <p class='uppercase'>Shipping</p>
-              <p>$30</p>
+              <p>${shippingCost()}</p>
             </div>
             <div class='mb-10 flex flex-col items-start justify-start'>
               <ShippingButton
@@ -84,7 +95,7 @@ export default function Home() {
               <p class='uppercase'>Discount</p>
               <p>-{discount()}%</p>
             </div>
-            <div class='mb-8 flex h-11 flex-row items-center rounded-xl bg-light-gray px-3'>
+            <div class='mb-3 flex h-11 flex-row items-center rounded-xl bg-light-gray px-3'>
               <input
                 class='w-full bg-transparent focus:outline-none'
                 placeholder='Enter discount code'
@@ -100,10 +111,19 @@ export default function Home() {
                 {discount() === 0 ? 'Apply' : 'Applied'}
               </button>
             </div>
+            <div class='mb-8 h-4 w-full'>
+              <Show when={discount() !== 0}>
+                <p class='text-xs text-light-green'>
+                  Discount has been applied to your order
+                </p>
+              </Show>
+            </div>
           </div>
-          <div class='rounded-xl bg-light-gray p-5'>
-            <p class='text-xl'>Fill in info for the delivery</p>
-            <p class='text-gray'>
+          <div class='flex flex-col items-center bg-light-gray p-5 sm:items-start sm:rounded-xl'>
+            <p class='text-center text-base sm:text-start sm:text-lg'>
+              Fill in info for the delivery
+            </p>
+            <p class='mt-1 text-center text-gray sm:text-start'>
               Use identical information from recipient's documents.
             </p>
             <input
@@ -143,9 +163,9 @@ export default function Home() {
               onInput={(e) => setPhone(e.currentTarget.value)}
             />
             <button class='mt-8 h-11 w-40 rounded-3xl bg-black text-white'>
-              Checkout <span class='text-gray'> {total}</span>
+              Checkout <span class='text-gray'>${total()}</span>
             </button>
-            <p class='mb-14 mt-10 text-xs'>
+            <p class='mb-14 mt-16 text-center text-xs sm:mt-8 sm:text-start'>
               By placing an order, you agree to our{' '}
               <a href='#' class='text-light-purple'>
                 Terms of Service
