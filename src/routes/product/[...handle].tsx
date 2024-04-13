@@ -47,7 +47,7 @@ export default function ProductPage(props: RouteSectionProps) {
       <main
         class={`flex min-h-screen flex-col items-center justify-between bg-white`}>
         <Navbar style={'light'} />
-        <div class='flex max-w-7xl flex-col gap-10 p-5 sm:flex-row sm:p-14'>
+        <div class='flex max-w-[1440px] flex-col gap-10 p-5 sm:flex-row sm:p-14'>
           <Show when={product()?.images}>
             <PhotoGallery images={product()!.images} />
           </Show>

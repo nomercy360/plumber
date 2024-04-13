@@ -225,7 +225,7 @@ export default function Home() {
                           <Match when={discount() > 0}>
                             <div class='flex h-11 w-full flex-row items-center justify-between rounded-lg bg-light-green/10 px-3'>
                               <div class='flex flex-row items-center justify-start gap-2.5'>
-                                <Icons.check class='size-4 fill-light-green' />
+                                <Icons.check class='size-4 fill-light-green text-light-green' />
                                 <p class='text-sm text-light-green'>
                                   {discount()}% discount applied
                                 </p>
@@ -329,7 +329,7 @@ export default function Home() {
                       <div class='mb-8 flex w-full flex-col gap-4'>
                         <input
                           class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
-                          placeholder='Height'
+                          placeholder='Height, cm'
                           value={measurements.height}
                           onInput={(e) =>
                             updateMeasurements('height', e.currentTarget.value)
@@ -337,7 +337,7 @@ export default function Home() {
                         />
                         <input
                           class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
-                          placeholder='Sleeve length'
+                          placeholder='Sleeve length, cm'
                           value={measurements.sleeve}
                           onInput={(e) =>
                             updateMeasurements('sleeve', e.currentTarget.value)
@@ -345,7 +345,7 @@ export default function Home() {
                         />
                         <input
                           class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
-                          placeholder='Waist'
+                          placeholder='Waist, cm'
                           value={measurements.waist}
                           onInput={(e) =>
                             updateMeasurements('waist', e.currentTarget.value)
@@ -353,7 +353,7 @@ export default function Home() {
                         />
                         <input
                           class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
-                          placeholder='Chest'
+                          placeholder='Chest, cm'
                           value={measurements.chest}
                           onInput={(e) =>
                             updateMeasurements('chest', e.currentTarget.value)
@@ -362,7 +362,7 @@ export default function Home() {
                         <div class='flex w-full flex-row items-center justify-start rounded-lg bg-gray'>
                           <input
                             class='h-11 w-full bg-transparent px-3 text-sm focus:outline-neutral-200 sm:text-base'
-                            placeholder='Hips'
+                            placeholder='Hips, cm'
                             value={measurements.hips}
                             onInput={(e) =>
                               updateMeasurements('hips', e.currentTarget.value)

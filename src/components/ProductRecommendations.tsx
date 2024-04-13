@@ -2,11 +2,11 @@ import { For } from 'solid-js';
 
 export default function ProductRecommendations(props: { products: any[] }) {
   return (
-    <section class='flex w-full flex-col items-center justify-center'>
+    <section class='flex w-full flex-col items-center justify-center sm:max-w-[1440px]'>
       <p class='mb-6 text-sm uppercase sm:mb-14 sm:text-base'>
         You may also like
       </p>
-      <div class='flex w-screen flex-row gap-10 overflow-x-auto p-5 sm:grid sm:w-full sm:max-w-7xl sm:grid-cols-4 sm:overflow-x-hidden sm:p-14'>
+      <div class='flex w-screen flex-row gap-10 overflow-x-auto p-5 sm:grid sm:w-full sm:grid-cols-4 sm:overflow-x-hidden sm:p-14'>
         <For each={props.products}>
           {(product) => (
             <a
