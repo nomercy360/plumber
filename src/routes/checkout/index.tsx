@@ -13,6 +13,7 @@ import Divider from '~/components/Divider';
 import { createStore } from 'solid-js/store';
 import EmptyCart from '~/components/EmptyCart';
 import NavbarCart from '~/components/NabarCart';
+import FailedOrder from '~/components/FailedOrder';
 
 export default function Home() {
   const [shippingOption, setShippingOption] = createSignal('standard');
@@ -53,11 +54,11 @@ export default function Home() {
     setShippingCost(shippingOption() === 'standard' ? 30 : 50);
   });
 
-  const [orderStatus, setOrderStatus] = createSignal('success');
+  const [orderStatus, setOrderStatus] = createSignal('');
 
   const placeOrder = async () => {
     await new Promise((resolve) => setTimeout(resolve, 600));
-    setOrderStatus('success');
+    setOrderStatus('failed');
   };
 
   const [step, setStep] = createSignal<'bag' | 'deliveryInfo' | 'measurements'>(
@@ -112,6 +113,9 @@ export default function Home() {
     <div class='bg-gray'>
       <Show when={getTotalItems() > 0}>
         <Switch fallback={<SuccessOrder />}>
+          <Match when={orderStatus() === 'failed'}>
+            <FailedOrder />
+          </Match>
           <Match when={orderStatus() === 'success'}>
             <SuccessOrder />
           </Match>
