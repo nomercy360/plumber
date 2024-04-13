@@ -53,7 +53,7 @@ export default function Home() {
     setShippingCost(shippingOption() === 'standard' ? 30 : 50);
   });
 
-  const [orderStatus, setOrderStatus] = createSignal('');
+  const [orderStatus, setOrderStatus] = createSignal('success');
 
   const placeOrder = async () => {
     await new Promise((resolve) => setTimeout(resolve, 600));
@@ -175,10 +175,14 @@ export default function Home() {
                             </div>
                             <div>
                               <p class='text-sm sm:text-base'>
-                                Make it fit perfectly
+                                {isMeasurementsFilled()
+                                  ? 'Measurements added'
+                                  : 'Make it fit perfectly'}
                               </p>
                               <p class='text-xs text-gray-light'>
-                                Add tailoring measurements. It’s absolutely free
+                                {isMeasurementsFilled()
+                                  ? 'We will tailor clothing to fit perfectly'
+                                  : 'Add tailoring measurements. It’s absolutely free!'}
                               </p>
                             </div>
                           </div>
