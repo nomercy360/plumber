@@ -16,9 +16,9 @@ export default function SubscribeForm() {
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
   return (
-    <div class='mt-24 flex max-w-sm flex-col items-center justify-center text-center'>
+    <div class='mt-24 flex max-w-sm flex-col items-center justify-center p-8 text-center'>
       <div class='flex flex-row items-center gap-2'>
-        <Icons.logo class='h-6 w-32 fill-black stroke-black' />
+        <Icons.logo class='h-6 w-24 fill-black stroke-black sm:w-32' />
         <span class='text-xl'>Secret Store</span>
       </div>
       <p class='mt-3 text-base sm:mt-4'>
