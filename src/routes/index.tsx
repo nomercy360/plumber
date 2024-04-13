@@ -2,6 +2,7 @@ import Navbar from '~/components/Navbar';
 import { For } from 'solid-js';
 import { products } from '~/lib/api';
 import Footer from '~/components/Footer';
+import SubscribeForm from '~/components/SubscribeForm';
 
 export default function Home() {
   return (
@@ -21,12 +22,17 @@ export default function Home() {
                   class='w-full rounded-lg object-cover'
                   src={product.image}
                 />
-                <p class='mb-1 mt-4 text-xs'>{product.name}</p>
-                <p class='text-xs'>{product.price}</p>
+                <p class='text-sm mb-1 mt-2.5 sm:mt-4 sm:text-base'>
+                  {product.name}
+                </p>
+                <p class='text-gray-light text-xs sm:text-base'>
+                  ${product.price}
+                </p>
               </a>
             )}
           </For>
         </div>
+        <SubscribeForm />
       </main>
       <Footer />
     </div>

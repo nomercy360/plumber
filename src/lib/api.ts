@@ -9,6 +9,12 @@ export const products = [
     title: '',
     sizes: ['XS', 'S', 'M'],
     image: '/images/showcase.webp',
+    images: [
+      '/images/preview.webp',
+      '/images/preview_2.webp',
+      '/images/preview_3.webp',
+      '/images/preview_4.webp',
+    ],
   },
   {
     id: 2,
@@ -19,6 +25,7 @@ export const products = [
     handle: 'spaghetti-strap-dress',
     sizes: ['XS', 'S', 'M'],
     image: '/images/showcase_2.webp',
+    images: ['/images/preview.webp'],
   },
   {
     id: 3,
@@ -29,6 +36,12 @@ export const products = [
     handle: 'notched-lapel-blazer',
     sizes: ['XS', 'S', 'M'],
     image: '/images/showcase_3.webp',
+    images: [
+      '/images/preview.webp',
+      '/images/preview_2.webp',
+      '/images/preview_3.webp',
+      '/images/preview_4.webp',
+    ],
   },
   {
     id: 4,
@@ -39,6 +52,12 @@ export const products = [
     handle: 'high-waisted-denim-shorts',
     sizes: ['XS', 'S', 'M'],
     image: '/images/showcase.webp',
+    images: [
+      '/images/preview.webp',
+      '/images/preview_2.webp',
+      '/images/preview_3.webp',
+      '/images/preview_4.webp',
+    ],
   },
   {
     id: 5,
@@ -49,6 +68,12 @@ export const products = [
     handle: 'a-line-midi-skirt',
     sizes: ['XS', 'S', 'M'],
     image: '/images/showcase_2.webp',
+    images: [
+      '/images/preview.webp',
+      '/images/preview_2.webp',
+      '/images/preview_3.webp',
+      '/images/preview_4.webp',
+    ],
   },
   {
     id: 6,
@@ -59,6 +84,12 @@ export const products = [
     handle: 'cropped-denim-jacket',
     sizes: ['XS', 'S', 'M'],
     image: '/images/showcase_3.webp',
+    images: [
+      '/images/preview.webp',
+      '/images/preview_2.webp',
+      '/images/preview_3.webp',
+      '/images/preview_4.webp',
+    ],
   },
   {
     id: 7,
@@ -69,6 +100,12 @@ export const products = [
     handle: 'silk-dress',
     sizes: ['XS', 'S', 'M'],
     image: '/images/showcase.webp',
+    images: [
+      '/images/preview.webp',
+      '/images/preview_2.webp',
+      '/images/preview_3.webp',
+      '/images/preview_4.webp',
+    ],
   },
   {
     id: 8,
@@ -79,5 +116,11 @@ export const products = [
     handle: 'spaghetti-strap-dress',
     sizes: ['XS', 'S', 'M'],
     image: '/images/showcase_2.webp',
+    images: [
+      '/images/preview.webp',
+      '/images/preview_2.webp',
+      '/images/preview_3.webp',
+      '/images/preview_4.webp',
+    ],
   },
 ];

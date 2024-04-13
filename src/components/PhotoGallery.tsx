@@ -1,27 +1,15 @@
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js';
 
-export default function PhotoGallery() {
+export default function PhotoGallery(props: { images: string[] }) {
   const [isMobile, setIsMobile] = createSignal(false);
   const [activeIndex, setActiveIndex] = createSignal(0);
 
   createEffect(() => {
-    setIsMobile(window.innerWidth < 640);
+    setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', () => {
+      setIsMobile(window.innerWidth < 768);
+    });
   });
-
-  const images = [
-    {
-      imgPath: '/images/preview.webp',
-    },
-    {
-      imgPath: '/images/preview_2.webp',
-    },
-    {
-      imgPath: '/images/preview_3.webp',
-    },
-    {
-      imgPath: '/images/preview_4.webp',
-    },
-  ];
 
   return (
     <div>
@@ -29,25 +17,47 @@ export default function PhotoGallery() {
         <div
           class='relative mt-8 flex w-full flex-col items-center justify-end'
           onClick={() => {
-            setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
+            setActiveIndex(
+              (prevIndex) => (prevIndex + 1) % props.images.length,
+            );
           }}>
-          <img alt='' class='size-full' src={images[activeIndex()].imgPath} />
+          <img alt='' class='size-full' src={props.images[activeIndex()]} />
           <div class='absolute z-10 my-5 flex items-center justify-center gap-2'>
-            {images.map((_, index) => (
-              <div
-                class={`size-2 rounded-full ${
-                  index === activeIndex() ? 'bg-white' : 'bg-white/20'
-                }`}
-              />
-            ))}
+            <For each={props.images}>
+              {(image, index) => (
+                <div
+                  classList={{
+                    'w-2 h-2 bg-white rounded-full': true,
+                    'bg-black': index() === activeIndex(),
+                  }}
+                />
+              )}
+            </For>
           </div>
         </div>
       ) : (
-        <div class='mt-8 grid grid-cols-2 gap-4'>
-          {images.map((card, index) => (
-            <img alt='' class='' src={card.imgPath} />
-          ))}
-        </div>
+        <Switch>
+          <Match when={props.images.length === 1}>
+            <img
+              alt=''
+              class='h-[1060px] w-full rounded-lg object-cover'
+              src={props.images[0]}
+            />
+          </Match>
+          <Match when={props.images.length > 1}>
+            <div class='grid w-full grid-cols-2 gap-4'>
+              <For each={props.images}>
+                {(image) => (
+                  <img
+                    alt=''
+                    class='h-[520px] w-full rounded-lg object-cover'
+                    src={image}
+                  />
+                )}
+              </For>
+            </div>
+          </Match>
+        </Switch>
       )}
     </div>
   );

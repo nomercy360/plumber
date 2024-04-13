@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer class='flex w-full flex-col items-start justify-start gap-14 bg-light-gray p-5 text-black'>
+    <footer class='bg-gray-bg flex w-full flex-col items-start justify-start gap-14 p-5 text-black'>
       <div class='flex flex-col items-start justify-start gap-2'>
         <a>Delivery & returns</a>
         <a>For stockists</a>

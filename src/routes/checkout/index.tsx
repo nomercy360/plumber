@@ -1,7 +1,19 @@
 import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js';
 import Navbar from '~/components/Navbar';
-import { getCartItems, getTotalItems } from '~/lib/cart';
+import {
+  clearCart,
+  getCartItems,
+  getTotalItems,
+  decreaseQuantity,
+  increaseQuantity,
+  initCart,
+} from '~/lib/cart';
 import SuccessOrder from '~/components/SuccessOrder';
+import Icons from '~/components/Icons';
+import Divider from '~/components/Divider';
+import { useRouter } from '@solidjs/router/dist/routing';
+import { createStore } from 'solid-js/store';
+import EmptyCart from '~/components/EmptyCart';
 
 export default function Home() {
   const [shippingOption, setShippingOption] = createSignal('standard');
@@ -35,169 +47,339 @@ export default function Home() {
   });
 
   createEffect(() => {
+    initCart();
+  }, []);
+
+  createEffect(() => {
     setShippingCost(shippingOption() === 'standard' ? 30 : 50);
   });
 
-  const [orderStatus, setOrderStatus] = createSignal('success');
+  const [orderStatus, setOrderStatus] = createSignal('');
 
   const placeOrder = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    await new Promise((resolve) => setTimeout(resolve, 600));
     setOrderStatus('success');
   };
 
+  const [step, setStep] = createSignal<
+    'bag' | 'deliveryInfo' | 'measurements' | 'prePayment'
+  >('bag');
+
+  const [isFormValid, setIsFormValid] = createSignal(false);
+
+  createEffect(() => {
+    const isValid =
+      name() !== '' &&
+      email() !== '' &&
+      address() !== '' &&
+      country() !== '' &&
+      zip() !== '' &&
+      phone() !== '';
+
+    setIsFormValid(isValid);
+  });
+
+  const [measurements, setMeasurements] = createStore({
+    height: '',
+    sleeve: '',
+    waist: '',
+    chest: '',
+    hips: '',
+  });
+
+  const updateMeasurements = (key: string, value: string) => {
+    setMeasurements(key as any, value);
+  };
+
+  const afterMeasurements = (save: boolean) => {
+    if (!save) {
+      setMeasurements({
+        height: '',
+        sleeve: '',
+        waist: '',
+        chest: '',
+        hips: '',
+      });
+    }
+
+    setStep('prePayment');
+  };
+
   return (
-    <div>
-      <Switch fallback={<SuccessOrder />}>
-        <Match when={orderStatus() === 'success'}>
-          <SuccessOrder />
-        </Match>
-        <Match when={!orderStatus()}>
-          <Navbar style={'light'} />
-          <main class='mt-8 flex items-center justify-center sm:mt-14'>
-            <div class='w-full max-w-7xl grid-cols-2 gap-10 p-0 sm:grid sm:p-10'>
-              <div class='p-5 sm:p-0'>
-                <div class='mb-5 flex flex-row items-center justify-between'>
-                  <p class='text-lg'>Total order</p>
-                  <p class='text-lg'>${total()}</p>
-                </div>
-                <div class='mb-5 flex flex-row items-center justify-between'>
-                  <p class='uppercase'>{getTotalItems()} items in bag</p>
-                  <p>${total()}</p>
-                </div>
-                <div class='mb-10 flex flex-col items-center justify-between gap-6'>
-                  <For each={getCartItems()}>
-                    {(item) => (
-                      <div class='flex w-full flex-row items-start justify-between'>
-                        <div class='flex flex-row items-start gap-3'>
-                          <img
-                            alt=''
-                            class='size-10 rounded-full object-cover'
-                            src='/images/thumb.png'
-                          />
-                          <div class='flex flex-col'>
-                            <p>{item.name}</p>
-                            <p class='text-xs text-gray'>{item.size}</p>
-                          </div>
-                        </div>
-                        <p>${item.price}</p>
+    <div class='bg-gray'>
+      <Show when={getTotalItems() > 0}>
+        <Switch fallback={<SuccessOrder />}>
+          <Match when={orderStatus() === 'success'}>
+            <SuccessOrder />
+          </Match>
+          <Match when={!orderStatus()}>
+            <Navbar style={'light'} />
+            <main class='mt-8 flex w-full items-start justify-center'>
+              <div class='flex min-h-screen w-full max-w-2xl flex-col rounded-xl bg-white'>
+                <Switch fallback={<div></div>}>
+                  <Match when={step() === 'bag'}>
+                    <div class='flex flex-col rounded-t-xl bg-white p-5'>
+                      <div class='flex flex-row items-center justify-between'>
+                        <p class='text-lg sm:text-xl'>
+                          ${total()} for ${getTotalItems()} items
+                        </p>
+                        <button
+                          class='h-8 text-gray-light'
+                          onClick={() => clearCart()}>
+                          Clear
+                        </button>
                       </div>
-                    )}
-                  </For>
-                </div>
-                <div class='mb-3 flex flex-row items-center justify-between'>
-                  <p class='uppercase'>Shipping</p>
-                  <p>${shippingCost()}</p>
-                </div>
-                <div class='mb-10 flex flex-col items-start justify-start'>
-                  <ShippingButton
-                    title='Standard Shipping'
-                    description='3-5 business days'
-                    price='$30'
-                    selected={shippingOption() === 'standard'}
-                    onClick={() => setShippingOption('standard')}
-                  />
-                  <ShippingButton
-                    title='Express Shipping'
-                    description='1-2 business days'
-                    price='$50'
-                    selected={shippingOption() === 'express'}
-                    onClick={() => setShippingOption('express')}
-                  />
-                </div>
-                <div class='mb-3 flex flex-row items-center justify-between'>
-                  <p class='uppercase'>Discount</p>
-                  <p>-{discount()}%</p>
-                </div>
-                <div class='mb-3 flex h-11 flex-row items-center rounded-xl bg-light-gray px-3'>
-                  <input
-                    class='w-full bg-transparent focus:outline-none'
-                    placeholder='Enter discount code'
-                    type='text'
-                    onInput={(e) => setPromoCode(e.currentTarget.value)}
-                  />
-                  <button
-                    classList={{
-                      'font-medium': true,
-                      'text-light-green': discount() !== 0,
-                    }}
-                    onClick={fetchDiscount}>
-                    {discount() === 0 ? 'Apply' : 'Applied'}
-                  </button>
-                </div>
-                <div class='mb-8 h-4 w-full'>
-                  <Show when={discount() !== 0}>
-                    <p class='text-xs text-light-green'>
-                      Discount has been applied to your order
-                    </p>
-                  </Show>
-                </div>
+                      <div class='mt-8 flex flex-col gap-5'>
+                        <For each={getCartItems()}>
+                          {(item) => (
+                            <div class='flex flex-row items-center justify-between'>
+                              <div class='flex flex-row items-center gap-3'>
+                                <img
+                                  alt=''
+                                  class='size-10 rounded-full object-cover'
+                                  src='/images/thumb.png'
+                                />
+                                <div class='flex flex-col'>
+                                  <p class='text-sm sm:text-base'>
+                                    {item.name}{' '}
+                                    {item.quantity > 1 && `x ${item.quantity}`}
+                                  </p>
+                                  <p class='text-xs text-gray-light sm:text-sm'>
+                                    Total ${item.price}
+                                  </p>
+                                </div>
+                              </div>
+                              <div class='flex w-24 flex-row items-center justify-center rounded-lg bg-gray text-lg'>
+                                <button
+                                  class='flex h-8 w-full items-center justify-center'
+                                  onClick={() => decreaseQuantity(item.id)}>
+                                  -
+                                </button>
+                                <div class='h-4 w-[3px] bg-neutral-200' />
+                                <button
+                                  class='h-8 w-full items-center justify-center'
+                                  onClick={() => increaseQuantity(item.id)}>
+                                  +
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </For>
+                        <div class='flex flex-row items-center justify-between'>
+                          <div class='flex flex-row items-center justify-start gap-2'>
+                            <div class='flex size-10 items-center justify-center rounded-full bg-gray'>
+                              <Icons.tShirt class='size-6' />
+                            </div>
+                            <div>
+                              <p class='text-sm sm:text-base'>
+                                Make it fit perfectly
+                              </p>
+                              <p class='text-xs text-gray-light'>
+                                Add tailoring measurements. It’s absolutely free
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            class='flex h-10 items-center justify-center px-2'
+                            onClick={() => setStep('measurements')}>
+                            <Icons.arrowRight class='h-3 w-2.5' />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <Divider></Divider>
+                    <div class='flex flex-col items-center p-5'>
+                      <TotalCostInfo total={total()} />
+                      <div class='mt-10 flex w-full flex-row items-center justify-start gap-5'>
+                        <div class='flex h-11 w-full flex-row items-center rounded-lg bg-gray px-3'>
+                          <input
+                            class='w-full bg-transparent focus:outline-none'
+                            placeholder='Add promo-code'
+                            type='text'
+                            onInput={(e) => setPromoCode(e.currentTarget.value)}
+                          />
+                          <button
+                            classList={{
+                              'font-medium': true,
+                              'text-light-green': discount() !== 0,
+                            }}
+                            onClick={fetchDiscount}>
+                            {discount() === 0 ? 'Apply' : 'Applied'}
+                          </button>
+                        </div>
+                        <button
+                          class='h-11 w-56 flex-shrink-0 rounded-3xl bg-black text-white'
+                          onClick={() => setStep('deliveryInfo')}>
+                          Continue • <span class='text-gray'>${total()}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </Match>
+                  <Match when={step() === 'deliveryInfo'}>
+                    <div class='flex flex-col items-center rounded-t-xl bg-white p-5 text-center sm:items-start sm:text-start'>
+                      <p class='mb-1 text-lg text-black sm:text-xl'>
+                        Add delivery information
+                      </p>
+                      <p class='mb-8 text-sm text-gray-light'>
+                        Use credentials the same way as they are shown in
+                        recipient's ID
+                      </p>
+                      <div class='mb-8 flex w-full flex-col gap-4'>
+                        <input
+                          class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                          placeholder='Name & surname'
+                          onInput={(e) => setName(e.currentTarget.value)}
+                        />
+                        <input
+                          class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                          placeholder='Email'
+                          onInput={(e) => setEmail(e.currentTarget.value)}
+                        />
+                        <input
+                          class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                          placeholder='Phone number'
+                          onInput={(e) => setPhone(e.currentTarget.value)}
+                        />
+                        <input
+                          class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                          placeholder='Country'
+                          onInput={(e) => setCountry(e.currentTarget.value)}
+                        />
+                        <div class='flex w-full flex-row items-center justify-start rounded-lg bg-gray'>
+                          <input
+                            class='h-11 w-full bg-transparent px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                            placeholder='Full address'
+                            onInput={(e) => setAddress(e.currentTarget.value)}
+                          />
+                          <div class='h-8 w-0.5 bg-neutral-200'></div>
+                          <input
+                            class='h-11 w-24 bg-transparent px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                            placeholder='Post code'
+                            onInput={(e) => setZip(e.currentTarget.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <Divider></Divider>
+                    <div class='flex flex-col items-center p-5'>
+                      <TotalCostInfo total={total()} />
+                      <div class='mt-10 flex w-full flex-row items-center justify-between'>
+                        <button
+                          class='h-11 w-24 rounded-3xl bg-gray text-black'
+                          onClick={() => setStep('bag')}>
+                          Back
+                        </button>
+                        <button
+                          class='h-11 w-56 flex-shrink-0 rounded-3xl text-white'
+                          classList={{
+                            'bg-black': isFormValid(),
+                            'bg-black/60 cursor-not-allowed': !isFormValid(),
+                          }}
+                          onClick={placeOrder}>
+                          Checkout • <span class='text-gray'>${total()}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </Match>
+                  <Match when={step() === 'measurements'}>
+                    <div class='flex flex-col items-center rounded-t-xl bg-white p-5 text-center sm:items-start sm:text-start'>
+                      <p class='mb-1 text-lg text-black sm:text-xl'>
+                        Add measurements
+                      </p>
+                      <p class='mb-8 text-sm text-gray-light'>
+                        Adding measurements is not necessary, but it will help
+                        us to make your dress fit perfectly
+                      </p>
+                      <div class='mb-8 flex w-full flex-col gap-4'>
+                        <input
+                          class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                          placeholder='Height'
+                          onInput={(e) =>
+                            updateMeasurements('height', e.currentTarget.value)
+                          }
+                        />
+                        <input
+                          class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                          placeholder='Sleeve length'
+                          onInput={(e) =>
+                            updateMeasurements('sleeve', e.currentTarget.value)
+                          }
+                        />
+                        <input
+                          class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                          placeholder='Waist'
+                          onInput={(e) =>
+                            updateMeasurements('waist', e.currentTarget.value)
+                          }
+                        />
+                        <input
+                          class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                          placeholder='Chest'
+                          onInput={(e) =>
+                            updateMeasurements('chest', e.currentTarget.value)
+                          }
+                        />
+                        <div class='flex w-full flex-row items-center justify-start rounded-lg bg-gray'>
+                          <input
+                            class='h-11 w-full bg-transparent px-3 text-sm focus:outline-neutral-200 sm:text-base'
+                            placeholder='Hips'
+                            onInput={(e) =>
+                              updateMeasurements('hips', e.currentTarget.value)
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div class='mt-10 flex w-full flex-row items-center justify-between'>
+                        <button
+                          class='h-11 w-24 rounded-3xl bg-gray text-black'
+                          onClick={() => afterMeasurements(false)}>
+                          Skip
+                        </button>
+                        <button
+                          class='h-11 w-56 flex-shrink-0 rounded-3xl bg-black text-white'
+                          onClick={() => afterMeasurements(true)}>
+                          Save measurements
+                        </button>
+                      </div>
+                    </div>
+                  </Match>
+                </Switch>
               </div>
-              <div class='flex flex-col items-center bg-light-gray p-5 sm:items-start sm:rounded-xl'>
-                <p class='text-center text-base sm:text-start sm:text-lg'>
-                  Fill in info for the delivery
-                </p>
-                <p class='mt-1 text-center text-gray sm:text-start'>
-                  Use identical information from recipient's documents.
-                </p>
-                <input
-                  class='mt-4 h-11 w-full rounded-xl bg-white p-3'
-                  placeholder='Name'
-                  type='text'
-                  onInput={(e) => setName(e.currentTarget.value)}
-                />
-                <input
-                  class='mt-4 h-11 w-full rounded-xl bg-white p-3'
-                  placeholder='Email'
-                  type='email'
-                  onInput={(e) => setEmail(e.currentTarget.value)}
-                />
-                <input
-                  class='mt-4 h-11 w-full rounded-xl bg-white p-3'
-                  placeholder='Address'
-                  type='text'
-                  onInput={(e) => setAddress(e.currentTarget.value)}
-                />
-                <input
-                  class='mt-4 h-11 w-full rounded-xl bg-white p-3'
-                  placeholder='Country'
-                  type='text'
-                  onInput={(e) => setCountry(e.currentTarget.value)}
-                />
-                <input
-                  class='mt-4 h-11 w-full rounded-xl bg-white p-3'
-                  placeholder='ZIP'
-                  type='text'
-                  onInput={(e) => setZip(e.currentTarget.value)}
-                />
-                <input
-                  class='mt-4 h-11 w-full rounded-xl bg-white p-3'
-                  placeholder='Phone'
-                  type='text'
-                  onInput={(e) => setPhone(e.currentTarget.value)}
-                />
-                <button
-                  class='mt-8 h-11 w-40 rounded-3xl bg-black text-white'
-                  onClick={placeOrder}>
-                  Checkout <span class='text-gray'>${total()}</span>
-                </button>
-                <p class='mb-14 mt-16 text-center text-xs sm:mt-8 sm:text-start'>
-                  By placing an order, you agree to our{' '}
-                  <a href='#' class='text-light-purple'>
-                    Terms of Service
-                  </a>{' '}
-                  and{' '}
-                  <a href='#' class='text-light-purple'>
-                    Privacy Policy
-                  </a>
-                </p>
-              </div>
-            </div>
-          </main>
-        </Match>
-      </Switch>
+            </main>
+          </Match>
+        </Switch>
+      </Show>
+      <Show when={getTotalItems() === 0}>
+        <EmptyCart />
+      </Show>
     </div>
   );
 }
+
+const TotalCostInfo = (props: { total: number }) => {
+  return (
+    <div class='flex w-full flex-col gap-2'>
+      <div class='flex w-full flex-row items-center justify-between'>
+        <p class='text-sm text-gray-light sm:text-base'>Subtotal</p>
+        <p class='text-sm text-gray-light sm:text-base'>${props.total}</p>
+      </div>
+      <div class='flex w-full flex-row items-center justify-between'>
+        <p class='text-sm text-gray-light sm:text-base'>Worldwide delivery</p>
+        <p class='text-sm text-gray-light sm:text-base'>approx $30</p>
+      </div>
+      <div class='mt-4 flex w-full flex-row items-center justify-between'>
+        <p class='text-base text-black sm:text-lg'>Total</p>
+        <p class='text-base text-black sm:text-lg'>${props.total}</p>
+      </div>
+      <div class='flex w-full flex-row items-center justify-between'>
+        <p class='text-xs text-gray-light'>
+          By clicking checkout, you are agreeing with Privacy Policy & Terms
+        </p>
+        <Icons.infoCircle class='size-3.5' />
+      </div>
+    </div>
+  );
+};
 
 function ShippingButton(props: {
   title: string;

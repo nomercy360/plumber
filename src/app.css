@@ -8,3 +8,9 @@
 
     filter: blur(17px);
 }
+
+@layer base {
+    html {
+        @apply text-black;
+    }
+}
