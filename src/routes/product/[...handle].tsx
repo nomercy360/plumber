@@ -10,6 +10,7 @@ import { createSignal, For, Show, Suspense } from 'solid-js';
 import { addToCart } from '~/lib/cart';
 import { products } from '~/lib/api';
 import Footer from '~/components/Footer';
+import SubscribeField from '~/components/SubscribeField';
 
 const getProduct = cache(async (handle: string) => {
   await new Promise((resolve) => setTimeout(resolve, 200));
@@ -43,17 +44,17 @@ export default function ProductPage(props: RouteSectionProps) {
   return (
     <div>
       <main
-        class={`flex min-h-screen flex-col items-center justify-between bg-white p-2`}>
+        class={`flex min-h-screen flex-col items-center justify-between bg-white`}>
         <Navbar style={'light'} />
-        <div class='flex flex-col gap-10 p-2 sm:flex-row sm:p-14'>
+        <div class='flex max-w-7xl flex-col gap-10 p-2 sm:flex-row sm:p-14'>
           <Show when={product()?.images}>
             <PhotoGallery images={product()!.images} />
           </Show>
-          <div class='flex flex-col items-start text-start text-black sm:w-2/5'>
-            <div class='mb-3 flex h-6 items-center justify-center rounded-full bg-[#F6F1FF] px-2 text-xs text-[#6E23E7]'>
+          <div class='flex w-full flex-col items-start text-start text-black'>
+            <div class='mb-3 flex h-6 items-center justify-center rounded-full bg-violet/10 px-2 text-xs uppercase text-violet'>
               3 pieces left
             </div>
-            <p class='text-lg text-black sm:text-xl'>{product()?.name} </p>
+            <p class='mb-1 text-lg text-black sm:text-xl'>{product()?.name} </p>
             <p class='text-sm text-gray-light sm:text-base'>
               {product()?.description}
             </p>
@@ -119,6 +120,31 @@ export default function ProductPage(props: RouteSectionProps) {
               stains or thorough cleaning, consider professional dry cleaning to
               maintain the fabric's integrity.
             </p>
+            <SubscribeField />
+          </div>
+        </div>
+        <div class='flex w-full flex-col items-center justify-center'>
+          <p class='mb-14 text-sm uppercase sm:text-base'>You may also like</p>
+          <div class='grid max-w-7xl grid-cols-4 gap-10 p-14'>
+            <For each={products.slice(0, 4)}>
+              {(product) => (
+                <a
+                  class='flex flex-col items-start justify-start'
+                  href={`/product/${product.handle}`}>
+                  <img
+                    alt=''
+                    class='w-full rounded-lg object-cover'
+                    src={product.image}
+                  />
+                  <p class='mb-1 mt-2.5 text-sm sm:mt-4 sm:text-base'>
+                    {product.name}
+                  </p>
+                  <p class='text-xs text-gray-light sm:text-base'>
+                    ${product.price}
+                  </p>
+                </a>
+              )}
+            </For>
           </div>
         </div>
       </main>

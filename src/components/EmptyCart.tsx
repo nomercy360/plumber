@@ -1,14 +1,10 @@
 import Icons from './Icons';
+import NavbarCart from '~/components/NabarCart';
 
 export default function EmptyCart() {
   return (
-    <main class='relative flex h-screen w-full items-center justify-center bg-white'>
-      <nav class='absolute left-0 top-0 flex w-full flex-row  items-center justify-between p-5'>
-        <Icons.logo class='h-6 w-32' />
-        <button onClick={() => window.history.back()}>
-          <Icons.close class='size-5' />
-        </button>
-      </nav>
+    <main class='flex h-screen w-full flex-col items-center justify-start bg-white'>
+      <NavbarCart />
       <div class='flex h-full flex-col items-center justify-between p-8 sm:justify-center'>
         <div></div>
         <div class='flex max-w-72 flex-col items-center justify-center text-center sm:max-w-sm'>
@@ -30,7 +26,6 @@ export default function EmptyCart() {
           </button>
         </div>
       </div>
-      ;
     </main>
   );
 }

@@ -1,5 +1,4 @@
 import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js';
-import Navbar from '~/components/Navbar';
 import {
   clearCart,
   getCartItems,
@@ -11,9 +10,9 @@ import {
 import SuccessOrder from '~/components/SuccessOrder';
 import Icons from '~/components/Icons';
 import Divider from '~/components/Divider';
-import { useRouter } from '@solidjs/router/dist/routing';
 import { createStore } from 'solid-js/store';
 import EmptyCart from '~/components/EmptyCart';
+import NavbarCart from '~/components/NabarCart';
 
 export default function Home() {
   const [shippingOption, setShippingOption] = createSignal('standard');
@@ -61,9 +60,9 @@ export default function Home() {
     setOrderStatus('success');
   };
 
-  const [step, setStep] = createSignal<
-    'bag' | 'deliveryInfo' | 'measurements' | 'prePayment'
-  >('bag');
+  const [step, setStep] = createSignal<'bag' | 'deliveryInfo' | 'measurements'>(
+    'bag',
+  );
 
   const [isFormValid, setIsFormValid] = createSignal(false);
 
@@ -102,7 +101,11 @@ export default function Home() {
       });
     }
 
-    setStep('prePayment');
+    setStep('bag');
+  };
+
+  const isMeasurementsFilled = () => {
+    return Object.values(measurements).some((value) => value !== '');
   };
 
   return (
@@ -113,7 +116,7 @@ export default function Home() {
             <SuccessOrder />
           </Match>
           <Match when={!orderStatus()}>
-            <Navbar style={'light'} />
+            <NavbarCart />
             <main class='mt-8 flex w-full items-start justify-center'>
               <div class='flex min-h-screen w-full max-w-2xl flex-col rounded-xl bg-white'>
                 <Switch fallback={<div></div>}>
@@ -189,24 +192,44 @@ export default function Home() {
                     </div>
                     <Divider></Divider>
                     <div class='flex flex-col items-center p-5'>
-                      <TotalCostInfo total={total()} />
+                      <TotalCostInfo
+                        total={total()}
+                        measurementFilled={isMeasurementsFilled()}
+                        discountPercent={discount()}
+                        discount={discount()}
+                      />
+
                       <div class='mt-10 flex w-full flex-row items-center justify-start gap-5'>
-                        <div class='flex h-11 w-full flex-row items-center rounded-lg bg-gray px-3'>
-                          <input
-                            class='w-full bg-transparent focus:outline-none'
-                            placeholder='Add promo-code'
-                            type='text'
-                            onInput={(e) => setPromoCode(e.currentTarget.value)}
-                          />
-                          <button
-                            classList={{
-                              'font-medium': true,
-                              'text-light-green': discount() !== 0,
-                            }}
-                            onClick={fetchDiscount}>
-                            {discount() === 0 ? 'Apply' : 'Applied'}
-                          </button>
-                        </div>
+                        <Switch fallback={<div></div>}>
+                          <Match when={discount() === 0}>
+                            <div class='flex h-11 w-full flex-row items-center rounded-lg bg-gray px-3'>
+                              <input
+                                class='w-full bg-transparent focus:outline-none'
+                                placeholder='Add promo-code'
+                                type='text'
+                                onInput={(e) =>
+                                  setPromoCode(e.currentTarget.value)
+                                }
+                              />
+                              <button onClick={fetchDiscount}>Apply</button>
+                            </div>
+                          </Match>
+                          <Match when={discount() > 0}>
+                            <div class='flex h-11 w-full flex-row items-center justify-between rounded-lg bg-light-green/10 px-3'>
+                              <div class='flex flex-row items-center justify-start gap-2.5'>
+                                <Icons.check class='size-4 fill-light-green' />
+                                <p class='text-sm text-light-green'>
+                                  {discount()}% discount applied
+                                </p>
+                              </div>
+                              <button
+                                class='text-light-green'
+                                onClick={() => setDiscount(0)}>
+                                <Icons.close class='size-4 fill-light-green' />
+                              </button>
+                            </div>
+                          </Match>
+                        </Switch>
                         <button
                           class='h-11 w-56 flex-shrink-0 rounded-3xl bg-black text-white'
                           onClick={() => setStep('deliveryInfo')}>
@@ -262,7 +285,12 @@ export default function Home() {
                     </div>
                     <Divider></Divider>
                     <div class='flex flex-col items-center p-5'>
-                      <TotalCostInfo total={total()} />
+                      <TotalCostInfo
+                        total={total()}
+                        measurementFilled={isMeasurementsFilled()}
+                        discountPercent={discount()}
+                        discount={discount()}
+                      />
                       <div class='mt-10 flex w-full flex-row items-center justify-between'>
                         <button
                           class='h-11 w-24 rounded-3xl bg-gray text-black'
@@ -294,6 +322,7 @@ export default function Home() {
                         <input
                           class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
                           placeholder='Height'
+                          value={measurements.height}
                           onInput={(e) =>
                             updateMeasurements('height', e.currentTarget.value)
                           }
@@ -301,6 +330,7 @@ export default function Home() {
                         <input
                           class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
                           placeholder='Sleeve length'
+                          value={measurements.sleeve}
                           onInput={(e) =>
                             updateMeasurements('sleeve', e.currentTarget.value)
                           }
@@ -308,6 +338,7 @@ export default function Home() {
                         <input
                           class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
                           placeholder='Waist'
+                          value={measurements.waist}
                           onInput={(e) =>
                             updateMeasurements('waist', e.currentTarget.value)
                           }
@@ -315,6 +346,7 @@ export default function Home() {
                         <input
                           class='h-11 w-full rounded-lg bg-gray px-3 text-sm focus:outline-neutral-200 sm:text-base'
                           placeholder='Chest'
+                          value={measurements.chest}
                           onInput={(e) =>
                             updateMeasurements('chest', e.currentTarget.value)
                           }
@@ -323,6 +355,7 @@ export default function Home() {
                           <input
                             class='h-11 w-full bg-transparent px-3 text-sm focus:outline-neutral-200 sm:text-base'
                             placeholder='Hips'
+                            value={measurements.hips}
                             onInput={(e) =>
                               updateMeasurements('hips', e.currentTarget.value)
                             }
@@ -356,13 +389,32 @@ export default function Home() {
   );
 }
 
-const TotalCostInfo = (props: { total: number }) => {
+const TotalCostInfo = (props: {
+  total: number;
+  measurementFilled: boolean;
+  discountPercent: number;
+  discount: number;
+}) => {
   return (
-    <div class='flex w-full flex-col gap-2'>
+    <div class='flex w-full flex-col gap-3'>
       <div class='flex w-full flex-row items-center justify-between'>
         <p class='text-sm text-gray-light sm:text-base'>Subtotal</p>
         <p class='text-sm text-gray-light sm:text-base'>${props.total}</p>
       </div>
+      <Show when={props.discount > 0}>
+        <div class='flex w-full flex-row items-center justify-between'>
+          <p class='text-sm text-gray-light sm:text-base'>Discount</p>
+          <p class='text-sm text-gray-light sm:text-base'>
+            -${props.discount} ({props.discountPercent}%)
+          </p>
+        </div>
+      </Show>
+      <Show when={props.measurementFilled}>
+        <div class='flex w-full flex-row items-center justify-between'>
+          <p class='text-sm text-gray-light sm:text-base'>Custom tailoring</p>
+          <p class='text-sm text-gray-light sm:text-base'>Free</p>
+        </div>
+      </Show>
       <div class='flex w-full flex-row items-center justify-between'>
         <p class='text-sm text-gray-light sm:text-base'>Worldwide delivery</p>
         <p class='text-sm text-gray-light sm:text-base'>approx $30</p>

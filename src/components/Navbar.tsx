@@ -19,10 +19,10 @@ export default function Navbar(props: { style: 'dark' | 'light' }) {
 
   return (
     <nav
-      class={`flex w-full flex-row items-center justify-between gap-3 bg-transparent p-5 text-base ${props.style === 'dark' ? 'text-white' : 'text-black'}`}>
+      class={`flex h-14 w-full flex-row items-center justify-between gap-3 bg-transparent p-6 text-base ${props.style === 'dark' ? 'text-white' : 'text-black'}`}>
       <a href='/'>
         <Icons.logo
-          class={`h-6 w-32 sm:h-10 sm:w-64 ${props.style === 'dark' ? 'text-white' : 'fill-black stroke-black'}`}
+          class={`h-6 w-32 ${props.style === 'dark' ? 'text-white' : 'fill-black stroke-black'}`}
         />
       </a>
       <div class='hidden flex-row items-center justify-between gap-3 sm:flex'>

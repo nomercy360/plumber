@@ -6,7 +6,7 @@ export default function SuccessOrder() {
       <div class='flex flex-col items-center gap-5'>
         <Icons.checkmark />
         <div>
-          <Icons.logo class='h-4 w-16 fill-black stroke-black sm:h-10 sm:w-64' />
+          <Icons.logo class='h-4 w-16 fill-black stroke-black sm:h-6 sm:w-32' />
           <span>got your order. So what’s next?</span>
         </div>
         <p>Wait for tracking number</p>
