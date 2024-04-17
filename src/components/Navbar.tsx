@@ -26,9 +26,9 @@ export default function Navbar(props: { style: 'dark' | 'light' }) {
         />
       </a>
       <div class='hidden flex-row items-center justify-between gap-3 sm:flex'>
-        <a href='#'>Gift Card</a>
+        <a href='/gift-card'>Gift Card</a>
         <a href='#'>Bespoke & Tailoring</a>
-        <a href='#'>About</a>
+        <a href='/about'>About</a>
         <CartButton cartItems={getTotalItems()} />
       </div>
       <div class='flex flex-row items-center justify-between gap-3 sm:hidden'>
@@ -42,9 +42,9 @@ export default function Navbar(props: { style: 'dark' | 'light' }) {
           <button onClick={() => setIsMenuOpen(false)}>
             <Icons.close class='absolute right-7 top-8 size-4' />
           </button>
-          <a href='#'>Gift Card</a>
+          <a href='/gift-card'>Gift Card</a>
           <a href='#'>Bespoke & Tailoring</a>
-          <a href='#'>About</a>
+          <a href='/about'>About</a>
         </div>
       </Show>
     </nav>
