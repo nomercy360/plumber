@@ -57,7 +57,7 @@ export default function ProductPage(props: RouteSectionProps) {
           <Show when={product()?.images}>
             <PhotoGallery images={product()!.images} />
           </Show>
-          <div class='flex w-full flex-col items-start text-start text-black'>
+          <div class='flex w-full flex-col items-start text-start text-black sm:w-[360px] sm:min-w-[360px]'>
             <div class='mb-3 flex h-6 items-center justify-center rounded-full bg-violet/10 px-2 text-xs uppercase text-violet'>
               3 pieces left
             </div>
@@ -127,19 +127,22 @@ export default function ProductPage(props: RouteSectionProps) {
               stains or thorough cleaning, consider professional dry cleaning to
               maintain the fabric's integrity.
             </p>
-            <div class='mt-5 flex h-10 w-full flex-row items-center justify-between rounded-3xl bg-violet/10 px-3'>
-              <p class='text-sm text-black sm:text-base'>
+            <button
+              class='mt-5 flex h-10 w-full flex-row items-center justify-between rounded-3xl bg-violet/10 px-3'
+              onClick={() => setSecretStoreIsOpen(true)}>
+              <span class='text-sm text-black'>
                 Get 5% by subscribing to our newsletter
-              </p>
-              <button
-                class='text-violet'
-                onClick={() => setSecretStoreIsOpen(true)}>
-                Subscribe
-              </button>
-            </div>
+              </span>
+              <span class='text-sm text-violet'>Subscribe</span>
+            </button>
           </div>
         </div>
-        <ProductRecommendations products={products.slice(0, 4)} />
+        <section class='mt-12 flex w-full flex-col items-center justify-center sm:mt-24 sm:max-w-[1440px]'>
+          <p class='mb-6 text-sm uppercase sm:mb-12 sm:text-base'>
+            You may also like
+          </p>
+          <ProductRecommendations products={products.slice(0, 4)} />
+        </section>
       </main>
       <Footer />
     </div>

@@ -12,7 +12,7 @@ export default function PhotoGallery(props: { images: string[] }) {
   });
 
   return (
-    <div class='max-w-full sm:min-w-[760px]'>
+    <div class='max-w-full'>
       <Switch>
         <Match when={isMobile()}>
           <div
@@ -44,7 +44,7 @@ export default function PhotoGallery(props: { images: string[] }) {
             <Match when={props.images.length === 1}>
               <img
                 alt=''
-                class='h-[1060px] w-full rounded-lg object-cover'
+                class='w-full rounded-lg object-cover'
                 src={props.images[0]}
               />
             </Match>
@@ -52,11 +52,7 @@ export default function PhotoGallery(props: { images: string[] }) {
               <div class='grid w-full flex-shrink-0 grid-cols-2 gap-4'>
                 <For each={props.images}>
                   {(image) => (
-                    <img
-                      alt=''
-                      class='h-[520px] min-w-[370px] rounded-lg object-cover'
-                      src={image}
-                    />
+                    <img alt='' class='rounded-lg object-cover' src={image} />
                   )}
                 </For>
               </div>
