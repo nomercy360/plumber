@@ -10,8 +10,8 @@ import { createSignal, For, Show, Suspense } from 'solid-js';
 import { addToCart } from '~/lib/cart';
 import { products } from '~/lib/api';
 import Footer from '~/components/Footer';
-import SubscribeField from '~/components/SubscribeField';
 import ProductRecommendations from '~/components/ProductRecommendations';
+import SecretStore from '~/components/SecretStore';
 
 const getProduct = cache(async (handle: string) => {
   await new Promise((resolve) => setTimeout(resolve, 200));
@@ -42,8 +42,14 @@ export default function ProductPage(props: RouteSectionProps) {
     addToCart(item);
   };
 
+  const [secretStoreIsOpen, setSecretStoreIsOpen] = createSignal(false);
+
   return (
     <div>
+      <SecretStore
+        isOpen={secretStoreIsOpen()}
+        setIsOpen={setSecretStoreIsOpen}
+      />
       <main
         class={`flex min-h-screen flex-col items-center justify-between bg-white`}>
         <Navbar style={'light'} />
@@ -121,7 +127,16 @@ export default function ProductPage(props: RouteSectionProps) {
               stains or thorough cleaning, consider professional dry cleaning to
               maintain the fabric's integrity.
             </p>
-            <SubscribeField />
+            <div class='mt-5 flex h-10 w-full flex-row items-center justify-between rounded-3xl bg-violet/10 px-3'>
+              <p class='text-sm text-black sm:text-base'>
+                Get 5% by subscribing to our newsletter
+              </p>
+              <button
+                class='text-violet'
+                onClick={() => setSecretStoreIsOpen(true)}>
+                Subscribe
+              </button>
+            </div>
           </div>
         </div>
         <ProductRecommendations products={products.slice(0, 4)} />

@@ -32,7 +32,7 @@ export default function Home() {
             )}
           </For>
         </div>
-        <SubscribeForm />
+        <SubscribeForm style={'light'} />
       </main>
       <Footer />
     </div>
