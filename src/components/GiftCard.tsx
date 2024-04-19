@@ -28,8 +28,11 @@ export default function GiftCard(props: {
             class='absolute right-5 top-5'>
             <Icons.close class='size-5 text-white' />
           </button>
-          <div class='max-w-sm text-center text-white'>
-            <h1 class='text-lg sm:text-xl'>PLUM® Gift Card</h1>
+          <div class='flex max-w-sm flex-col items-center justify-center text-center text-white'>
+            <div class='flex flex-row items-center gap-2'>
+              <Icons.logo class='h-6 w-24 text-white sm:w-32' />
+              <span class='text-xl'>Secret Store</span>
+            </div>
             <p class='mt-2.5 text-sm sm:text-base'>
               Send a compliment to your loved ones and provide them with the
               opportunity to choose. We'll send a virtual gift card to their
