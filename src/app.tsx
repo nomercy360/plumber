@@ -18,7 +18,7 @@ export default function App() {
           />
           <Meta
             property='og:image'
-            content='https://plumplum.co/og-image.jpg'
+            content='https://plumplum.co/images/og-image.jpg'
           />
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
