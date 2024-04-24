@@ -6,7 +6,7 @@ import {
 } from '@solidjs/router';
 import PhotoGallery from '~/components/PhotoGallery';
 import Navbar from '~/components/Navbar';
-import { createSignal, For, Show, Suspense } from 'solid-js';
+import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js';
 import { addToCart } from '~/lib/cart';
 import { products } from '~/lib/api';
 import Footer from '~/components/Footer';
@@ -14,7 +14,6 @@ import ProductRecommendations from '~/components/ProductRecommendations';
 import SecretStore from '~/components/SecretStore';
 
 const getProduct = cache(async (handle: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 200));
   return products.find((product) => product.handle === handle);
 }, 'product');
 
@@ -27,10 +26,9 @@ export const route = {
 export default function ProductPage(props: RouteSectionProps) {
   const product = createAsync(() => getProduct(props.params.handle));
   const [selectedSize, setSelectedSize] = createSignal<string>('');
+  const [wasAddedToCart, setWasAddedToCart] = createSignal(false);
 
   const handleAddToCart = () => {
-    if (!selectedSize()) return;
-
     const item = {
       id: product()!.id,
       name: product()!.name,
@@ -40,9 +38,25 @@ export default function ProductPage(props: RouteSectionProps) {
     };
 
     addToCart(item);
+
+    setWasAddedToCart(true);
   };
 
+  createEffect(() => {
+    if (product()?.sizes) {
+      setSelectedSize(product()!.sizes[0]);
+    }
+  });
+
   const [secretStoreIsOpen, setSecretStoreIsOpen] = createSignal(false);
+
+  const chooseSize = (size: string) => {
+    setSelectedSize(size);
+
+    if (wasAddedToCart()) {
+      setWasAddedToCart(false);
+    }
+  };
 
   return (
     <div>
@@ -51,9 +65,9 @@ export default function ProductPage(props: RouteSectionProps) {
         setIsOpen={setSecretStoreIsOpen}
       />
       <main
-        class={`flex min-h-screen flex-col items-center justify-between bg-white`}>
+        class={`mb-12 flex min-h-screen flex-col items-center justify-between bg-white sm:mb-28`}>
         <Navbar style={'light'} />
-        <div class='flex max-w-[1440px] flex-col gap-10 p-5 sm:flex-row sm:p-14'>
+        <div class='mt-0 flex max-w-[1440px] flex-col gap-10 px-5 sm:mt-28 sm:flex-row sm:px-14'>
           <Show when={product()?.images}>
             <PhotoGallery images={product()!.images} />
           </Show>
@@ -76,18 +90,27 @@ export default function ProductPage(props: RouteSectionProps) {
                         'text-dark-gray bg-gray': size !== selectedSize(),
                         'text-white bg-black': size === selectedSize(),
                       }}
-                      onClick={() => setSelectedSize(size)}>
+                      onClick={() => chooseSize(size)}>
                       {size}
                     </button>
                   )}
                 </For>
               </div>
-              <button
-                class='flex h-9 flex-row items-center justify-between gap-2 rounded-full bg-button px-2.5 text-white sm:h-11 sm:text-base'
-                onClick={handleAddToCart}>
-                <p class='text-white'>Add to bag</p>
-                <p class='text-gray-light'>${product()?.price}</p>
-              </button>
+              <Switch>
+                <Match when={!wasAddedToCart()}>
+                  <button
+                    class='flex h-11 min-w-[140px] flex-row items-center justify-between gap-2 rounded-full bg-button px-3.5 text-base text-white'
+                    onClick={handleAddToCart}>
+                    <p class='text-white'>Add to Bag</p>
+                    <p class='text-gray-light'>${product()?.price}</p>
+                  </button>
+                </Match>
+                <Match when={wasAddedToCart()}>
+                  <div class='flex h-11 min-w-[140px] flex-row items-center justify-center gap-2 rounded-full bg-light-green px-3.5 text-base text-white'>
+                    <p class='text-white'>Added</p>
+                  </div>
+                </Match>
+              </Switch>
             </div>
             <p class='mt-10 text-sm uppercase text-black sm:mt-14 sm:text-base'>
               FITS PERFECTLY
@@ -137,8 +160,8 @@ export default function ProductPage(props: RouteSectionProps) {
             </button>
           </div>
         </div>
-        <section class='mt-12 flex w-full flex-col items-center justify-center sm:mt-24 sm:max-w-[1440px]'>
-          <p class='mb-6 text-sm uppercase sm:mb-12 sm:text-base'>
+        <section class='mt-14 flex w-full flex-col items-center justify-center sm:mt-24 sm:max-w-[1440px]'>
+          <p class='mb-2 text-sm uppercase sm:mb-12 sm:text-base'>
             You may also like
           </p>
           <ProductRecommendations products={products.slice(0, 4)} />

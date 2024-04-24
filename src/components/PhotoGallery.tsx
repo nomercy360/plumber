@@ -16,7 +16,7 @@ export default function PhotoGallery(props: { images: string[] }) {
       <Switch>
         <Match when={isMobile()}>
           <div
-            class='relative mt-8 flex w-full flex-col items-center justify-end'
+            class='relative flex w-full flex-col items-center justify-end'
             onClick={() => {
               setActiveIndex(
                 (prevIndex) => (prevIndex + 1) % props.images.length,

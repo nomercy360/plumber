@@ -7,11 +7,11 @@ import SubscribeForm from '~/components/SubscribeForm';
 export default function Home() {
   return (
     <div>
-      <main class='flex min-h-screen flex-col items-center justify-between bg-white p-2 pb-60'>
+      <main class='flex min-h-screen flex-col items-center justify-between bg-white p-2 pb-24 sm:pb-44'>
         <div class='h-[600px] w-full rounded-lg bg-[url(/images/hero-mobile.webp)] bg-cover bg-center sm:bg-[url(/images/hero.webp)]'>
           <Navbar style={'dark'} />
         </div>
-        <div class='mt-4 grid grid-cols-2 gap-4 px-2 sm:mt-16 sm:grid-cols-4 sm:gap-10 sm:px-10'>
+        <div class='mb-10 mt-4 grid grid-cols-2 gap-4 px-2 sm:mb-20 sm:mt-16 sm:grid-cols-4 sm:gap-10 sm:px-10'>
           <For each={products}>
             {(product) => (
               <a

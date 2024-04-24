@@ -13,7 +13,7 @@ export default function ProductRecommendations(props: { products: any[] }) {
 
   return (
     <Suspense fallback={<LoaderSkeleton />}>
-      <div class='flex w-screen flex-row gap-10 overflow-x-auto p-5 sm:grid sm:w-full sm:grid-cols-4 sm:overflow-x-hidden sm:p-14'>
+      <div class='flex w-screen flex-row gap-3 overflow-x-auto p-5 sm:grid sm:w-full sm:grid-cols-4 sm:gap-10 sm:overflow-x-hidden sm:p-14'>
         <For each={products()}>
           {(product) => (
             <a

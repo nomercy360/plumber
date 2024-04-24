@@ -12,8 +12,9 @@ import Icons from '~/components/Icons';
 import Divider from '~/components/Divider';
 import { createStore } from 'solid-js/store';
 import EmptyCart from '~/components/EmptyCart';
-import NavbarCart from '~/components/NabarCart';
+import NavbarCart from '~/components/NavbarCart';
 import FailedOrder from '~/components/FailedOrder';
+import StepperButton from '~/components/StepperButton';
 
 export default function Home() {
   const [shippingOption, setShippingOption] = createSignal('standard');
@@ -39,7 +40,7 @@ export default function Home() {
   createEffect(() => {
     let total = 0;
     getCartItems().forEach((item) => {
-      total += item.price;
+      total += item.price * item.quantity;
     });
     total += shippingCost();
     total -= (total * discount()) / 100;
@@ -110,7 +111,7 @@ export default function Home() {
   };
 
   return (
-    <div class='bg-gray'>
+    <div class='min-h-screen bg-white sm:bg-gray'>
       <Show when={getTotalItems() > 0}>
         <Switch fallback={<SuccessOrder />}>
           <Match when={orderStatus() === 'failed'}>
@@ -122,7 +123,7 @@ export default function Home() {
           <Match when={!orderStatus()}>
             <NavbarCart />
             <main class='mt-8 flex w-full items-start justify-center'>
-              <div class='flex min-h-screen w-full max-w-2xl flex-col rounded-xl bg-white'>
+              <div class='flex w-full max-w-2xl flex-col rounded-xl bg-white sm:h-screen'>
                 <Switch fallback={<div></div>}>
                   <Match when={step() === 'bag'}>
                     <div class='flex flex-col rounded-t-xl bg-white p-5'>
@@ -139,7 +140,7 @@ export default function Home() {
                       <div class='mt-8 flex flex-col gap-5'>
                         <For each={getCartItems()}>
                           {(item) => (
-                            <div class='flex flex-row items-center justify-between'>
+                            <div class='flex flex-row items-center justify-between gap-3'>
                               <div class='flex flex-row items-center gap-3'>
                                 <img
                                   alt=''
@@ -151,29 +152,22 @@ export default function Home() {
                                     {item.name}{' '}
                                     {item.quantity > 1 && `x ${item.quantity}`}
                                   </p>
-                                  <p class='text-xs text-gray-light sm:text-sm'>
+                                  <p class='text-xs text-gray-light sm:text-sm '>
                                     Total ${item.price}
                                   </p>
                                 </div>
                               </div>
-                              <div class='flex w-24 flex-row items-center justify-center rounded-lg bg-gray text-lg'>
-                                <button
-                                  class='flex h-8 w-full items-center justify-center'
-                                  onClick={() => decreaseQuantity(item.id)}>
-                                  -
-                                </button>
-                                <div class='h-4 w-[3px] bg-neutral-200' />
-                                <button
-                                  class='h-8 w-full items-center justify-center'
-                                  onClick={() => increaseQuantity(item.id)}>
-                                  +
-                                </button>
-                              </div>
+                              <StepperButton
+                                onIncrease={() => increaseQuantity(item.id)}
+                                onDecrease={() => decreaseQuantity(item.id)}
+                              />
                             </div>
                           )}
                         </For>
-                        <div class='flex flex-row items-center justify-between'>
-                          <div class='flex flex-row items-center justify-start gap-2'>
+                        <button
+                          class='flex flex-row items-center justify-between text-start'
+                          onClick={() => setStep('measurements')}>
+                          <div class='flex flex-row items-center justify-start gap-3'>
                             <div class='flex size-10 items-center justify-center rounded-full bg-gray'>
                               <Icons.tShirt class='size-6' />
                             </div>
@@ -190,12 +184,10 @@ export default function Home() {
                               </p>
                             </div>
                           </div>
-                          <button
-                            class='flex h-10 items-center justify-center px-2'
-                            onClick={() => setStep('measurements')}>
+                          <div class='flex h-10 items-center justify-center px-2'>
                             <Icons.arrowRight class='h-3 w-2.5' />
-                          </button>
-                        </div>
+                          </div>
+                        </button>
                       </div>
                     </div>
                     <Divider></Divider>
@@ -206,8 +198,7 @@ export default function Home() {
                         discountPercent={discount()}
                         discount={discount()}
                       />
-
-                      <div class='mt-10 flex w-full flex-row items-center justify-start gap-5'>
+                      <div class='mt-10 flex w-full flex-col items-center justify-between gap-5 sm:flex-row sm:justify-start'>
                         <Switch fallback={<div></div>}>
                           <Match when={discount() === 0}>
                             <div class='flex h-11 w-full flex-row items-center rounded-lg bg-gray px-3'>
@@ -239,7 +230,7 @@ export default function Home() {
                           </Match>
                         </Switch>
                         <button
-                          class='h-11 w-56 flex-shrink-0 rounded-3xl bg-black text-white'
+                          class='h-11 w-full flex-shrink-0 rounded-3xl bg-black text-white sm:w-56'
                           onClick={() => setStep('deliveryInfo')}>
                           Continue • <span class='text-gray'>${total()}</span>
                         </button>
@@ -322,7 +313,7 @@ export default function Home() {
                       <p class='mb-1 text-lg text-black sm:text-xl'>
                         Add measurements
                       </p>
-                      <p class='mb-8 text-sm text-gray-light'>
+                      <p class='mb-8 max-w-xs text-sm text-gray-light sm:max-w-4xl'>
                         Adding measurements is not necessary, but it will help
                         us to make your dress fit perfectly
                       </p>
@@ -370,14 +361,14 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <div class='mt-10 flex w-full flex-row items-center justify-between'>
+                      <div class='mt-10 flex w-full max-w-[220px] flex-col items-center justify-between gap-4 sm:max-w-max sm:flex-row sm:gap-0'>
                         <button
-                          class='h-11 w-24 rounded-3xl bg-gray text-black'
+                          class='h-11 w-full rounded-3xl bg-gray text-black sm:w-24'
                           onClick={() => afterMeasurements(false)}>
                           Skip
                         </button>
                         <button
-                          class='h-11 w-56 flex-shrink-0 rounded-3xl bg-black text-white'
+                          class='h-11 w-full flex-shrink-0 rounded-3xl bg-black text-white sm:w-56'
                           onClick={() => afterMeasurements(true)}>
                           Save measurements
                         </button>

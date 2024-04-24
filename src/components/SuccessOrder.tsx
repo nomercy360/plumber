@@ -1,5 +1,5 @@
 import Icons from '~/components/Icons';
-import NavbarCart from '~/components/NabarCart';
+import NavbarCart from '~/components/NavbarCart';
 
 export default function SuccessOrder() {
   return (

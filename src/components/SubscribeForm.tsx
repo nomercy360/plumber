@@ -35,21 +35,18 @@ export default function SubscribeForm(props: { style: 'dark' | 'light' }) {
         <span class='text-xl'>Secret Store</span>
       </div>
       <p class='mt-3 text-base sm:mt-4'>
-        Check n***@proton.me for the order confirmation letter. Once the order
-        is ready, we will send you a tracking number. If you want to be in the
-        know about all our new drops, why not give us a follow on Instagram?
+        Receive monthly news from the brand, a letter from the founders,
+        exclusive product discounts, and enjoy a perpetual 5% off
       </p>
       <Switch fallback={<div />}>
         <Match when={emailSent()}>
-          <div class='mt-5 flex h-14 w-full flex-row items-center justify-between rounded-lg bg-light-green/60 p-3 sm:mt-8'>
+          <div class='mt-5 flex h-14 w-full flex-row items-center justify-between rounded-lg bg-light-green p-3 sm:mt-8'>
             <div class='flex flex-row items-center justify-start gap-2.5'>
-              <Icons.check class='size-4 fill-light-green text-light-green' />
-              <p class='text-sm text-light-green'>Subscribed</p>
+              <Icons.check class='size-4 fill-white text-white' />
+              <p class='text-sm text-white'>Subscribed</p>
             </div>
-            <button
-              class='text-light-green'
-              onClick={() => setEmailSent(false)}>
-              <Icons.close class='size-4 fill-light-green' />
+            <button class='p-2 text-white' onClick={() => setEmailSent(false)}>
+              <Icons.close class='size-4 fill-white' />
             </button>
           </div>
         </Match>

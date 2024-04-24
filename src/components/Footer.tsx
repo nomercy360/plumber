@@ -3,9 +3,8 @@ export default function Footer() {
     <footer class='flex w-full flex-col items-start justify-start gap-14 bg-gray p-5 text-black'>
       <div class='flex flex-col items-start justify-start gap-2'>
         <a href='#'>Delivery & returns</a>
-        <a href='#'>For stockists</a>
         <a href='#'>Instagram</a>
-        <a href='/terms'>Privacy policy</a>
+        <a href='/terms'>Policy & terms</a>
         <a href='/gift-card'>Gift Card</a>
       </div>
       <div class='flex w-full flex-row justify-between text-xs text-gray-light'>

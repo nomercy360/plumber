@@ -1,5 +1,5 @@
 import Icons from './Icons';
-import NavbarCart from '~/components/NabarCart';
+import NavbarCart from '~/components/NavbarCart';
 
 export default function EmptyCart() {
   return (
@@ -9,7 +9,7 @@ export default function EmptyCart() {
         <div></div>
         <div class='flex max-w-72 flex-col items-center justify-center text-center sm:max-w-sm'>
           <Icons.emptyCart class='h-36 w-36' />
-          <p class='-mt-12 mb-2.5 text-lg sm:text-xl'>Your bag is empty</p>
+          <p class='-mt-12 text-lg sm:mb-2.5 sm:text-xl'>Your bag is empty</p>
           <p class='mb-8 text-sm sm:text-base'>
             Add an item as soon as possible, and we will deliver this beauty to
             you.

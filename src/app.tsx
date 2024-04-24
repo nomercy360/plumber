@@ -1,4 +1,4 @@
-import { MetaProvider, Title } from '@solidjs/meta';
+import { Meta, MetaProvider, Title } from '@solidjs/meta';
 import { Router } from '@solidjs/router';
 import { FileRoutes } from '@solidjs/start/router';
 import { Suspense } from 'solid-js';
@@ -11,6 +11,11 @@ export default function App() {
       root={(props) => (
         <MetaProvider>
           <Title>Пламбир</Title>
+          <Meta name='description' content='Пламбир' />
+          <Meta
+            name='viewport'
+            content='width=device-width, initial-scale=1 user-scalable=no'
+          />
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
       )}>
