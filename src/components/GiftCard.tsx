@@ -45,7 +45,7 @@ export default function GiftCard(props: {
   return (
     <Show when={props.isOpen}>
       <div
-        class='items center fixed left-0 top-0 z-50 flex h-screen w-full justify-center overflow-auto bg-white/10 backdrop-blur-sm sm:pt-28'
+        class='items center fixed left-0 top-0 z-50 flex min-h-screen w-full justify-center overflow-auto bg-white/10 backdrop-blur-sm sm:pt-28'
         id='gift-card'>
         <div class='relative flex h-full min-h-fit w-full max-w-7xl flex-col items-center justify-between bg-[url(/images/gift-card-bg-mobile.png)] bg-cover bg-center px-5 py-7 sm:rounded-t-2xl sm:bg-[url(/images/gift-card-bg.png)]'>
           <button

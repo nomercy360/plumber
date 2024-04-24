@@ -129,7 +129,7 @@ export default function Home() {
                     <div class='flex flex-col rounded-t-xl bg-white p-5'>
                       <div class='flex flex-row items-center justify-between'>
                         <p class='text-lg sm:text-xl'>
-                          ${total()} for ${getTotalItems()} items
+                          ${total()} for {getTotalItems()} items
                         </p>
                         <button
                           class='h-8 text-gray-light'

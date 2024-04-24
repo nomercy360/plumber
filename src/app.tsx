@@ -11,10 +11,14 @@ export default function App() {
       root={(props) => (
         <MetaProvider>
           <Title>Пламбир</Title>
-          <Meta name='description' content='Пламбир' />
+          <Meta name='description' content='Плам Плам' />
           <Meta
             name='viewport'
             content='width=device-width, initial-scale=1 user-scalable=no'
+          />
+          <Meta
+            property='og:image'
+            content='https://plumplum.co/og-image.jpg'
           />
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
